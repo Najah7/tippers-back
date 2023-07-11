@@ -117,3 +117,6 @@ $RECYCLE.BIN/
 
 # 環境変数
 .env
+
+# air
+tmp
