@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"time"
+	"tippers-back/db/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -42,4 +43,20 @@ func NewDB() (*DB, error) {
 		conn:  db,
 		limit: limit,
 	}, nil
+}
+
+func (d *DB) CreateTable() error {
+	if err := d.conn.AutoMigrate(&model.User{}); err != nil {
+		return err
+	}
+	if err := d.conn.AutoMigrate(&model.Restaurant{}); err != nil {
+		return err
+	}
+	if err := d.conn.AutoMigrate(&model.Tip{}); err != nil {
+		return err
+	}
+	if err := d.conn.AutoMigrate(&model.PaypayID{}); err != nil {
+		return err
+	}
+	return nil
 }
