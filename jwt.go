@@ -9,7 +9,7 @@ import (
 func JwtGenerate() (string, error) {
 	// Claimsオブジェクトの作成
 	claims := jwt.MapClaims{
-		"user_id": 1,// TODO userIdを入れるようにする
+		"user_id": 1, // TODO userIdを入れるようにする
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
 
