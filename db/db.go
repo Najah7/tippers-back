@@ -10,7 +10,12 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func NewDB() (*gorm.DB, error) {
+type DB struct {
+	conn  *gorm.DB
+	limit uint
+}
+
+func NewDB() (*DB, error) {
 	USER := os.Getenv("DB_USER")
 	PASS := os.Getenv("DB_PASSWORD")
 	PROTOCOL := os.Getenv("DB_PROTOCOL")
@@ -32,6 +37,9 @@ func NewDB() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return db, nil
+	var limit uint = 100
+	return &DB{
+		conn:  db,
+		limit: limit,
+	}, nil
 }
