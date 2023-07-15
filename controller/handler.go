@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"tippers-back/db"
 	"tippers-back/db/table"
+	"tippers-back/lib"
 	"tippers-back/service"
 
 	"github.com/gin-gonic/gin"
@@ -38,7 +39,6 @@ func (h *handler) GetUsers(c *gin.Context) {
 
 func (h *handler) GetUser(c *gin.Context) {
 	var user *table.User
-	var err error
 
 	stringID := c.Param("id")
 	id, err := strconv.Atoi(stringID)
@@ -56,7 +56,7 @@ func (h *handler) GetUser(c *gin.Context) {
 }
 
 func (h *handler) RegisterUser(c *gin.Context) {
-	var user table.User
+	var user *table.User
 	var err error
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -71,6 +71,44 @@ func (h *handler) RegisterUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+func (h *handler) UpdateUser(c *gin.Context) {
+	stringID := c.Param("id")
+	id, err := strconv.Atoi(stringID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	float64UserID := c.MustGet("user_id").(float64)
+	UserID := int(float64UserID)
+	if id != UserID {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Authorization header is missing",
+		})
+		return
+	}
+	var user *table.User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	dbUser, err := h.db.GetUserByID(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	dbUser = lib.UpdateUser(user, dbUser)
+
+	user, err = h.db.UpdateUser(dbUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
 func (h *handler) Login(c *gin.Context) {
 	type resposen struct {
 		Token string `json:"token"`
@@ -78,7 +116,6 @@ func (h *handler) Login(c *gin.Context) {
 	var response resposen
 
 	var user table.User
-	var err error
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -92,7 +129,7 @@ func (h *handler) Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	response.Token, err = service.JwtGenerate(user)
+	response.Token, err = service.JwtGenerate(*dbUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

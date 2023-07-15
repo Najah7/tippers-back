@@ -86,9 +86,16 @@ func (d *DB) GetUserByMail(mail string) (*table.User, error) {
 	return &user, nil
 }
 
-func (d *DB) RegisterUser(user table.User) (table.User, error) {
+func (d *DB) RegisterUser(user *table.User) (*table.User, error) {
 	if err := d.Conn.Create(&user).Error; err != nil {
-		return user, err
+		return nil, err
+	}
+	return user, nil
+}
+
+func (d *DB) UpdateUser(user *table.User) (*table.User, error) {
+	if err := d.Conn.Save(&user).Error; err != nil {
+		return nil, err
 	}
 	return user, nil
 }
