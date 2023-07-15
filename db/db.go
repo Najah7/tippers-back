@@ -68,7 +68,6 @@ func (d *DB) GetUserByMail(mail string) (*model.User, error) {
 	if err := d.Conn.Where("email = ?", mail).First(&user).Error; err != nil {
 		return nil, err
 	}
-	fmt.Println(user.Password)
 	return &user, nil
 }
 

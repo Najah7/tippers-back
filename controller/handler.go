@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"tippers-back/db"
@@ -58,7 +57,6 @@ func (h *handler) Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println(dbUser.Password)
 	if err := service.ComparePassword(dbUser.Password, user.Password); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
