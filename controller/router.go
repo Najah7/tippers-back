@@ -14,6 +14,7 @@ func Router() *gin.Engine {
 	h := handler{}
 	h.Init()
 	r.GET("/user", h.GetUsers)
+	r.GET("/user/:id", h.GetUser)
 	r.POST("/user", h.RegisterUser)
 	r.POST("/login", h.Login)
 	return r

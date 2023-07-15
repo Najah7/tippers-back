@@ -54,6 +54,14 @@ func (d *DB) GetUsers(users *[]table.User) (*[]table.User, error) {
 	return users, nil
 }
 
+func (d *DB) GetUserByID(id int) (*table.User, error) {
+	var user table.User
+	if err := d.Conn.Where("id = ?", id).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (d *DB) CreateTable() error {
 	if err := d.Conn.AutoMigrate(&table.User{}); err != nil {
 		return err

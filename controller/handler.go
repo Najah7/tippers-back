@@ -3,6 +3,7 @@ package controller
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"tippers-back/db"
 	"tippers-back/db/table"
 	"tippers-back/service"
@@ -33,6 +34,25 @@ func (h *handler) GetUsers(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, users)
+}
+
+func (h *handler) GetUser(c *gin.Context) {
+	var user *table.User
+	var err error
+
+	stringID := c.Param("id")
+	id, err := strconv.Atoi(stringID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err = h.db.GetUserByID(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, user)
 }
 
 func (h *handler) RegisterUser(c *gin.Context) {
