@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"tippers-back/db"
-	"tippers-back/db/model"
+	"tippers-back/db/table"
 	"tippers-back/service"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func (h *handler) Init() {
 }
 
 func (h *handler) RegisterUser(c *gin.Context) {
-	var user model.User
+	var user table.User
 	var err error
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -46,7 +46,7 @@ func (h *handler) Login(c *gin.Context) {
 	}
 	var response resposen
 
-	var user model.User
+	var user table.User
 	var err error
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

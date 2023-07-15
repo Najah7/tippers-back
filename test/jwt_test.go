@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"strings"
 	"testing"
-	"tippers-back/db/model"
+	"tippers-back/db/table"
 	"tippers-back/service"
 )
 
@@ -14,7 +14,7 @@ func TestJwtGenerate(t *testing.T) {
 		UserID int `json:"user_id"`
 	}
 
-	user := model.User{}
+	user := table.User{}
 	user.ID = 1
 	token, err := service.JwtGenerate(user)
 	if err != nil {

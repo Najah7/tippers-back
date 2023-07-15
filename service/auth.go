@@ -3,13 +3,13 @@ package service
 import (
 	"fmt"
 	"tippers-back/db"
-	"tippers-back/db/model"
+	"tippers-back/db/table"
 
 	"github.com/golang-jwt/jwt"
 )
 
 // Retrieve the user from the database
-func GetUserByName(db db.DB, name string) (*model.User, error) {
+func GetUserByName(db db.DB, name string) (*table.User, error) {
 	user, err := db.GetUserByMail(name)
 	if err != nil {
 		return nil, err
