@@ -13,6 +13,7 @@ func Router() *gin.Engine {
 	r.Use(middleware.AuthMiddleware())
 	h := handler{}
 	h.Init()
+	r.GET("/user", h.GetUsers)
 	r.POST("/user", h.RegisterUser)
 	r.POST("/login", h.Login)
 	return r

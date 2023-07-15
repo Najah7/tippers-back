@@ -47,6 +47,13 @@ func NewDB() (*DB, error) {
 	}, nil
 }
 
+func (d *DB) GetUsers(users *[]table.User) (*[]table.User, error) {
+	if err := d.Conn.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
 func (d *DB) CreateTable() error {
 	if err := d.Conn.AutoMigrate(&table.User{}); err != nil {
 		return err
