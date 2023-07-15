@@ -4,7 +4,6 @@ import (
 	"log"
 	"tippers-back/controller"
 	"tippers-back/db"
-	"tippers-back/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -18,7 +17,6 @@ func main() {
 
 	db.NewDB()
 	r := controller.Router()
-	r.Use(middleware.AuthMiddleware())
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",

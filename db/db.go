@@ -63,10 +63,12 @@ func (d *DB) CreateTable() error {
 	return nil
 }
 
-func (d *DB) GetUserByMail(mail string) (model.User, error) {
+func (d *DB) GetUserByMail(mail string) (*model.User, error) {
 	var user model.User
-	d.Conn.Where("mail = ?", mail).First(&user)
-	return user, nil
+	if err := d.Conn.Where("email = ?", mail).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (d *DB) RegisterUser(user model.User) (model.User, error) {

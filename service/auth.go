@@ -9,10 +9,10 @@ import (
 )
 
 // Retrieve the user from the database
-func GetUserByName(db db.DB, name string) (model.User, error) {
+func GetUserByName(db db.DB, name string) (*model.User, error) {
 	user, err := db.GetUserByMail(name)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 	return user, nil
 }
