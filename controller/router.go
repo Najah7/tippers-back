@@ -20,6 +20,7 @@ func Router() *gin.Engine {
 	}
 	{
 		r.GET("/restaurant", h.GetRestaurants)
+		r.GET("/restaurant/:id", h.GetRestaurant)
 	}
 
 	authorized := r.Group("/")
