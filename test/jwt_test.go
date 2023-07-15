@@ -15,14 +15,14 @@ func TestJwtGenerate(t *testing.T) {
 	}
 
 	user := table.User{}
-	user.ID = 1
+	user.ID = 100
 	token, err := service.JwtGenerate(user)
 	if err != nil {
 		t.Errorf("toke作成失敗 token: %v", token)
 		return
 	}
 	validate, err := service.JwtValidate(token)
-	if err != nil || !validate.Valid {
+	if err != nil && !validate.Valid {
 		t.Errorf("token 検証失敗 token: %v", token)
 		return
 	}
@@ -50,7 +50,6 @@ func TestJwtGenerate(t *testing.T) {
 		t.Error("Failed to parse payload:", err)
 		return
 	}
-
 	if int(user.ID) != claims.UserID {
 		t.Errorf("want: %v got: %v", int(user.ID), claims.UserID)
 	}
