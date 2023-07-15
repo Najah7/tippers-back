@@ -4,14 +4,14 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Email            string `gorm:"unique"`
-	Name             string
-	Password         string
-	ProfileImageURL  string
-	Dream            string
-	Major            string
-	IsStudent        int
-	IsEmployed       int
-	PeriodOfWorkings string
-	RestaurantID     int `gorm:"foreignkey:ID"`
+	Email            string `gorm:"unique" json:"email"`
+	Name             string `json:"name"`
+	Password         string `json:"password"`
+	ProfileImageURL  string `json:"profileImageURL"`
+	Dream            string `json:"dream"`
+	Major            string `json:"major"`
+	IsStudent        int    `json:"isStudent"`
+	IsEmployed       int    `json:"isEmployed"`
+	PeriodOfWorkings string `json:"periodOfWorkings"`
+	RestaurantID     int    `gorm:"foreignkey:ID" json:"restaurantID"`
 }

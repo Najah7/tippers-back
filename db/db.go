@@ -47,6 +47,21 @@ func NewDB() (*DB, error) {
 	}, nil
 }
 
+func (d *DB) GetUsers(users *[]table.User) (*[]table.User, error) {
+	if err := d.Conn.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+func (d *DB) GetUserByID(id int) (*table.User, error) {
+	var user table.User
+	if err := d.Conn.Where("id = ?", id).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (d *DB) CreateTable() error {
 	if err := d.Conn.AutoMigrate(&table.User{}); err != nil {
 		return err
@@ -71,9 +86,23 @@ func (d *DB) GetUserByMail(mail string) (*table.User, error) {
 	return &user, nil
 }
 
-func (d *DB) RegisterUser(user table.User) (table.User, error) {
+func (d *DB) RegisterUser(user *table.User) (*table.User, error) {
 	if err := d.Conn.Create(&user).Error; err != nil {
-		return user, err
+		return nil, err
 	}
 	return user, nil
+}
+
+func (d *DB) UpdateUser(user *table.User) (*table.User, error) {
+	if err := d.Conn.Save(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (d *DB) DeleteUserByID(id int) error {
+	if err := d.Conn.Delete(&table.User{}, id).Error; err != nil {
+		return err
+	}
+	return nil
 }

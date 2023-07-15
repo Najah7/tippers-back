@@ -10,10 +10,21 @@ import (
 func Router() *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.Default())
-	r.Use(middleware.AuthMiddleware())
 	h := handler{}
 	h.Init()
-	r.POST("/user", h.RegisterUser)
-	r.POST("/login", h.Login)
+	{
+		r.GET("/user", h.GetUsers)
+		r.GET("/user/:id", h.GetUser)
+		r.POST("/user", h.RegisterUser)
+		r.POST("/login", h.Login)
+	}
+
+	authorized := r.Group("/")
+	authorized.Use(middleware.AuthMiddleware())
+	{
+		authorized.PATCH("/user/:id", h.UpdateUser)
+		authorized.DELETE("/user/:id", h.DeleteUser)
+	}
+
 	return r
 }
