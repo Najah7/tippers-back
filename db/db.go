@@ -99,3 +99,10 @@ func (d *DB) UpdateUser(user *table.User) (*table.User, error) {
 	}
 	return user, nil
 }
+
+func (d *DB) DeleteUserByID(id int) error {
+	if err := d.Conn.Delete(&table.User{}, id).Error; err != nil {
+		return err
+	}
+	return nil
+}

@@ -109,6 +109,30 @@ func (h *handler) UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+func (h *handler) DeleteUser(c *gin.Context) {
+	stringID := c.Param("id")
+	id, err := strconv.Atoi(stringID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	float64UserID := c.MustGet("user_id").(float64)
+	userID := int(float64UserID)
+	if id != userID {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Authorization header is missing",
+		})
+		return
+	}
+
+	err = h.db.DeleteUserByID(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, true)
+}
+
 func (h *handler) Login(c *gin.Context) {
 	type resposen struct {
 		Token string `json:"token"`
