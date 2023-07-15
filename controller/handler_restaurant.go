@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 	"tippers-back/db/table"
-	"tippers-back/lib"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,16 +48,7 @@ func (h *handler) RegisterRestaurant(c *gin.Context) {
 	}
 
 	float64UserID := c.MustGet("user_id").(float64)
-	userID := int(float64UserID)
-	dbUser, err := h.db.GetUserByID(userID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	user := &table.User{}
-	user.RestaurantID = int(restaurant.ID)
-	dbUser = lib.UpdateUser(user, dbUser)
-	user, err = h.db.UpdateUser(dbUser)
+	err = h.db.UpdateUserRestaurantIDByID(int(float64UserID), int(restaurant.ID))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

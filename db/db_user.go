@@ -62,3 +62,11 @@ func (d *DB) DeleteUserByID(id int) error {
 	}
 	return nil
 }
+
+func (d *DB) UpdateUserRestaurantIDByID(id, restaurantID int) error {
+	if err := d.Conn.Model(&table.User{}).Where("id = ?", id).Update("restaurant_id", restaurantID).Error; err != nil {
+		return err
+	}
+	return nil
+
+}
