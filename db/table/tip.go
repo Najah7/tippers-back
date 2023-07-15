@@ -1,8 +1,6 @@
 package table
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -11,6 +9,5 @@ type Tip struct {
 	SenderID      int `gorm:"foreignkey:ID"`
 	ReceiverID    int `gorm:"foreignkey:ID"`
 	Amount        int
-	Timestamp     time.Time
 	ThanksMessage string
 }

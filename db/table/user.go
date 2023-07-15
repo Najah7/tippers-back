@@ -10,6 +10,7 @@ type User struct {
 	ProfileImageURL  string `json:"profileImageURL"`
 	Dream            string `json:"dream"`
 	Major            string `json:"major"`
+	Money            int    `json:"money"`
 	IsStudent        int    `json:"isStudent"`
 	IsEmployed       int    `json:"isEmployed"`
 	PeriodOfWorkings string `json:"periodOfWorkings"`

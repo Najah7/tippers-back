@@ -1,6 +1,10 @@
 package db
 
-import "tippers-back/db/table"
+import (
+	"tippers-back/db/table"
+
+	"gorm.io/gorm"
+)
 
 func (d *DB) GetUsers() (*[]table.User, error) {
 	var users *[]table.User
@@ -65,6 +69,18 @@ func (d *DB) DeleteUserByID(id int) error {
 
 func (d *DB) UpdateUserRestaurantIDByID(id, restaurantID int) error {
 	if err := d.Conn.Model(&table.User{}).Where("id = ?", id).Update("restaurant_id", restaurantID).Error; err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func (d *DB) UpdateUserMoneyByID(senderID, receiverID, money int) error {
+	if err := d.Conn.Model(&table.User{}).Where("id = ?", senderID).Update("money", gorm.Expr("money - ?", money)).Error; err != nil {
+		return err
+	}
+
+	if err := d.Conn.Model(&table.User{}).Where("id = ?", receiverID).Update("money", gorm.Expr("money + ?", money)).Error; err != nil {
 		return err
 	}
 	return nil

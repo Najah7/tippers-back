@@ -9,3 +9,11 @@ func (d *DB) GetTipsBySenderID(senderID int) (*[]table.Tip, error) {
 	}
 	return tips, nil
 }
+
+func (d *DB) SendTip(tip *table.Tip) (*table.Tip, error) {
+
+	if err := d.Conn.Create(&tip).Error; err != nil {
+		return nil, err
+	}
+	return tip, nil
+}
