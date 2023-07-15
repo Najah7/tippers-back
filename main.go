@@ -4,7 +4,6 @@ import (
 	"log"
 	"tippers-back/controller"
 	"tippers-back/db"
-	"tippers-back/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
