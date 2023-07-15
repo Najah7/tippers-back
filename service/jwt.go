@@ -32,7 +32,7 @@ func JwtGenerate(user model.User) (string, error) {
 func getJwtSecret() string {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		return ""
+		return "secret"
 	}
 	return secret
 }
