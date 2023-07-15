@@ -3,14 +3,14 @@ package service
 import (
 	"os"
 	"time"
-	"tippers-back/db/model"
+	"tippers-back/db/table"
 
 	"github.com/golang-jwt/jwt"
 )
 
 var jwtSecret = []byte(getJwtSecret())
 
-func JwtGenerate(user model.User) (string, error) {
+func JwtGenerate(user table.User) (string, error) {
 	// Claimsオブジェクトの作成
 	claims := jwt.MapClaims{
 		"user_id": user.ID,

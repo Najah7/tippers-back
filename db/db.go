@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"time"
-	"tippers-back/db/model"
+	"tippers-back/db/table"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -48,30 +48,30 @@ func NewDB() (*DB, error) {
 }
 
 func (d *DB) CreateTable() error {
-	if err := d.Conn.AutoMigrate(&model.User{}); err != nil {
+	if err := d.Conn.AutoMigrate(&table.User{}); err != nil {
 		return err
 	}
-	if err := d.Conn.AutoMigrate(&model.Restaurant{}); err != nil {
+	if err := d.Conn.AutoMigrate(&table.Restaurant{}); err != nil {
 		return err
 	}
-	if err := d.Conn.AutoMigrate(&model.Tip{}); err != nil {
+	if err := d.Conn.AutoMigrate(&table.Tip{}); err != nil {
 		return err
 	}
-	if err := d.Conn.AutoMigrate(&model.PaypayID{}); err != nil {
+	if err := d.Conn.AutoMigrate(&table.PaypayID{}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *DB) GetUserByMail(mail string) (*model.User, error) {
-	var user model.User
+func (d *DB) GetUserByMail(mail string) (*table.User, error) {
+	var user table.User
 	if err := d.Conn.Where("email = ?", mail).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
-func (d *DB) RegisterUser(user model.User) (model.User, error) {
+func (d *DB) RegisterUser(user table.User) (table.User, error) {
 	if err := d.Conn.Create(&user).Error; err != nil {
 		return user, err
 	}
