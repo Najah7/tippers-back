@@ -79,8 +79,8 @@ func (h *handler) UpdateUser(c *gin.Context) {
 		return
 	}
 	float64UserID := c.MustGet("user_id").(float64)
-	UserID := int(float64UserID)
-	if id != UserID {
+	userID := int(float64UserID)
+	if id != userID {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Authorization header is missing",
 		})
@@ -92,7 +92,7 @@ func (h *handler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	dbUser, err := h.db.GetUserByID(id)
+	dbUser, err := h.db.GetUserByID(userID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
