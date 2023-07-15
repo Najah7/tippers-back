@@ -2,7 +2,8 @@ package db
 
 import "tippers-back/db/table"
 
-func (d *DB) GetUsers(users *[]table.User) (*[]table.User, error) {
+func (d *DB) GetUsers() (*[]table.User, error) {
+	var users *[]table.User
 	if err := d.Conn.Find(&users).Error; err != nil {
 		return nil, err
 	}

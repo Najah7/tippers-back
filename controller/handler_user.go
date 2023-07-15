@@ -27,9 +27,7 @@ func (h *handler) Init() {
 }
 
 func (h *handler) GetUsers(c *gin.Context) {
-	var users *[]table.User
-	var err error
-	users, err = h.db.GetUsers(users)
+	users, err := h.db.GetUsers()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
