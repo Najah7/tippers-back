@@ -37,7 +37,6 @@ func (h *handler) GetUsers(c *gin.Context) {
 
 func (h *handler) GetUser(c *gin.Context) {
 	var user *table.User
-
 	stringID := c.Param("id")
 	id, err := strconv.Atoi(stringID)
 	if err != nil {
