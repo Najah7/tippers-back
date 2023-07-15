@@ -1,15 +1,19 @@
-package main
+package service
 
 import (
+	"os"
 	"time"
+	"tippers-back/db/model"
 
 	"github.com/golang-jwt/jwt"
 )
 
-func JwtGenerate() (string, error) {
+var jwtSecret = []byte(getJwtSecret())
+
+func JwtGenerate(user model.User) (string, error) {
 	// Claimsオブジェクトの作成
 	claims := jwt.MapClaims{
-		"user_id": 1, // TODO userIdを入れるようにする
+		"user_id": user.ID,
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
 
@@ -17,10 +21,18 @@ func JwtGenerate() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// トークンに署名を付与
-	tokenString, err := token.SignedString([]byte("SECRET_KEY"))
+	tokenString, err := token.SignedString([]byte(jwtSecret))
 	if err != nil {
 		return "", err
 	}
 
 	return tokenString, nil
+}
+
+func getJwtSecret() string {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		return ""
+	}
+	return secret
 }
