@@ -17,3 +17,10 @@ func (d *DB) GetRestaurantByID(id int) (*table.Restaurant, error) {
 	}
 	return &restaurant, nil
 }
+
+func (d *DB) RegisterRestaurant(restaurant *table.Restaurant) (*table.Restaurant, error) {
+	if err := d.Conn.Create(&restaurant).Error; err != nil {
+		return nil, err
+	}
+	return restaurant, nil
+}

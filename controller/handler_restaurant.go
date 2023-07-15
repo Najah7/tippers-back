@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"tippers-back/db/table"
+	"tippers-back/lib"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,5 +32,37 @@ func (h *handler) GetRestaurant(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	c.JSON(http.StatusOK, restaurant)
+}
+
+func (h *handler) RegisterRestaurant(c *gin.Context) {
+	var restaurant *table.Restaurant
+	var err error
+	if err := c.ShouldBindJSON(&restaurant); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	restaurant, err = h.db.RegisterRestaurant(restaurant)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	float64UserID := c.MustGet("user_id").(float64)
+	userID := int(float64UserID)
+	dbUser, err := h.db.GetUserByID(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	user := &table.User{}
+	user.RestaurantID = int(restaurant.ID)
+	dbUser = lib.UpdateUser(user, dbUser)
+	user, err = h.db.UpdateUser(dbUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, restaurant)
 }

@@ -28,6 +28,7 @@ func Router() *gin.Engine {
 	{
 		authorized.PATCH("/user/:id", h.UpdateUser)
 		authorized.DELETE("/user/:id", h.DeleteUser)
+		authorized.POST("/restaurant", h.RegisterRestaurant)
 	}
 
 	return r
