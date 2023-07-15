@@ -18,6 +18,9 @@ func Router() *gin.Engine {
 		r.POST("/user", h.RegisterUser)
 		r.POST("/login", h.Login)
 	}
+	{
+		r.GET("/restaurant", h.GetRestaurants)
+	}
 
 	authorized := r.Group("/")
 	authorized.Use(middleware.AuthMiddleware())
