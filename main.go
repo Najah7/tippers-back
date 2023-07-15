@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"tippers-back/controller"
 	"tippers-back/db"
 	"tippers-back/middleware"
 
@@ -14,8 +15,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("読み込み出来ませんでした: %v", err)
 	}
-	r := gin.Default()
+
 	db.NewDB()
+	r := controller.Router()
 	r.Use(middleware.AuthMiddleware())
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -12,17 +13,18 @@ import (
 )
 
 type DB struct {
-	conn  *gorm.DB
-	limit uint
+	Conn  *gorm.DB
+	Limit uint
 }
 
 func NewDB() (*DB, error) {
-	USER := os.Getenv("DB_USER")
-	PASS := os.Getenv("DB_PASSWORD")
-	PROTOCOL := os.Getenv("DB_PROTOCOL")
-	DBNAME := os.Getenv("DB_DBNAME")
+	DB_USER := os.Getenv("DB_USER")
+	DB_PASS := os.Getenv("DB_PASS")
+	DB_NAME := os.Getenv("DB_NAME")
+	DB_PORT := os.Getenv("DB_PORT")
+	DB_TZ := os.Getenv("DB_TZ")
 
-	dsn := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=%s", DB_USER, DB_PASS, DB_PORT, DB_NAME, DB_TZ)
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
@@ -40,22 +42,22 @@ func NewDB() (*DB, error) {
 	}
 	var limit uint = 100
 	return &DB{
-		conn:  db,
-		limit: limit,
+		Conn:  db,
+		Limit: limit,
 	}, nil
 }
 
 func (d *DB) CreateTable() error {
-	if err := d.conn.AutoMigrate(&model.User{}); err != nil {
+	if err := d.Conn.AutoMigrate(&model.User{}); err != nil {
 		return err
 	}
-	if err := d.conn.AutoMigrate(&model.Restaurant{}); err != nil {
+	if err := d.Conn.AutoMigrate(&model.Restaurant{}); err != nil {
 		return err
 	}
-	if err := d.conn.AutoMigrate(&model.Tip{}); err != nil {
+	if err := d.Conn.AutoMigrate(&model.Tip{}); err != nil {
 		return err
 	}
-	if err := d.conn.AutoMigrate(&model.PaypayID{}); err != nil {
+	if err := d.Conn.AutoMigrate(&model.PaypayID{}); err != nil {
 		return err
 	}
 	return nil
@@ -63,6 +65,13 @@ func (d *DB) CreateTable() error {
 
 func (d *DB) GetUserByMail(mail string) (model.User, error) {
 	var user model.User
-	d.conn.Where("mail = ?", mail).First(&user)
+	d.Conn.Where("mail = ?", mail).First(&user)
+	return user, nil
+}
+
+func (d *DB) RegisterUser(user model.User) (model.User, error) {
+	if err := d.Conn.Create(&user).Error; err != nil {
+		return user, err
+	}
 	return user, nil
 }
