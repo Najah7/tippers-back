@@ -81,5 +81,11 @@ func (d *DB) UpdateUserMoneyByID(senderID, receiverID, money int) error {
 		return err
 	}
 	return nil
+}
 
+func (d *DB) UpdateProfileImageURLIDByID(id int, pass string) error {
+	if err := d.Conn.Model(&table.User{}).Where("id = ?", id).Update("profile_image_url", pass).Error; err != nil {
+		return err
+	}
+	return nil
 }
