@@ -10,6 +10,8 @@ import (
 	"tippers-back/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	imgupload "github.com/olahol/go-imageupload"
 )
 
 type handler struct {
@@ -157,4 +159,43 @@ func (h *handler) Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *handler) UploadUserProfile(c *gin.Context) {
+	type response struct {
+		ProfileImageURL string `json:"profileImageURL"`
+	}
+
+	img, err := imgupload.Process(c.Request, "file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	webp, err := lib.ConvertToWebp(img)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	uuid, err := uuid.NewRandom()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	filename := uuid.String() + ".webp"
+	filepass, err := lib.UploadImage(webp, filename, "user")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	float64UserID := c.MustGet("user_id").(float64)
+	userID := int(float64UserID)
+	if err := h.db.UpdateProfileImageURLIDByID(userID, filepass); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, &response{
+		ProfileImageURL: filepass,
+	})
 }

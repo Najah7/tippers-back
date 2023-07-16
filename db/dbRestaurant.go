@@ -24,3 +24,10 @@ func (d *DB) RegisterRestaurant(restaurant *table.Restaurant) (*table.Restaurant
 	}
 	return restaurant, nil
 }
+
+func (d *DB) UpdateRestaurantProfileImageURLIDByID(id int, pass string) error {
+	if err := d.Conn.Model(&table.Restaurant{}).Where("id = ?", id).Update("profile_image_url", pass).Error; err != nil {
+		return err
+	}
+	return nil
+}
