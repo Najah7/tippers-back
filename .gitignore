@@ -121,4 +121,5 @@ $RECYCLE.BIN/
 # air
 tmp
 
-/image
+/image/restaurant/
+/image/user/
