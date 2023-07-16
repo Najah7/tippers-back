@@ -168,7 +168,7 @@ func (h *handler) UploadUserProfile(c *gin.Context) {
 
 	img, err := imgupload.Process(c.Request, "file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errork": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	webp, err := lib.ConvertToWebp(img)
@@ -179,20 +179,20 @@ func (h *handler) UploadUserProfile(c *gin.Context) {
 
 	uuid, err := uuid.NewRandom()
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	filename := uuid.String() + ".webp"
 	filepass, err := lib.UploadImage(webp, filename, "user")
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	float64UserID := c.MustGet("user_id").(float64)
 	userID := int(float64UserID)
 	if err := h.db.UpdateProfileImageURLIDByID(userID, filepass); err != nil {
-		c.Status(http.StatusInternalServerError)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, &response{
