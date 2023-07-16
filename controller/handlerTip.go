@@ -18,6 +18,23 @@ func (h *handler) GetTips(c *gin.Context) {
 	c.JSON(http.StatusOK, tips)
 }
 
+func (h *handler) GetTotalAmount(c *gin.Context) {
+	type resposen struct {
+		Total int `json:"total"`
+	}
+	var totalTip resposen
+	float64UserID := c.MustGet("user_id").(float64)
+	userID := int(float64UserID)
+	tipTotalDB, err := h.db.GetTipAmountBySenderID(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	totalTip.Total = *tipTotalDB
+
+	c.JSON(http.StatusOK, totalTip)
+}
+
 func (h *handler) SendTip(c *gin.Context) {
 	var tip *table.Tip
 	var err error

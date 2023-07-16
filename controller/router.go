@@ -32,6 +32,7 @@ func Router() *gin.Engine {
 		authorized.POST("/restaurant", h.RegisterRestaurant)
 		authorized.GET("/tip", h.GetTips)
 		authorized.POST("/tip", h.SendTip)
+		authorized.GET("/tip/total", h.GetTotalAmount)
 	}
 
 	return r

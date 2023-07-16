@@ -32,9 +32,6 @@ func (d *DB) CreateTable() error {
 	if err := d.Conn.AutoMigrate(&table.Tip{}); err != nil {
 		return err
 	}
-	if err := d.Conn.AutoMigrate(&table.PaypayID{}); err != nil {
-		return err
-	}
 	return nil
 }
 
