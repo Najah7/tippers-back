@@ -86,3 +86,11 @@ func (d *DB) UpdateUserMoneyByID(senderID, receiverID, money int) error {
 	return nil
 
 }
+
+func (d *DB) GetEmployedUsers() (*[]table.User, error) {
+	var users []table.User
+	if err := d.Conn.Where("is_employed = ?", 1).Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return &users, nil
+}

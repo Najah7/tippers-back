@@ -22,6 +22,9 @@ func Router() *gin.Engine {
 		r.GET("/restaurant", h.GetRestaurants)
 		r.GET("/restaurant/:id", h.GetRestaurant)
 	}
+	{
+		r.GET("/employ", h.GetEmployedUsers)
+	}
 
 	authorized := r.Group("/")
 	authorized.Use(middleware.AuthMiddleware())
