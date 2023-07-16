@@ -161,7 +161,7 @@ func (h *handler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (h *handler) UploadProfile(c *gin.Context) {
+func (h *handler) UploadUserProfile(c *gin.Context) {
 	type response struct {
 		ProfileImageURL string `json:"profileImageURL"`
 	}
