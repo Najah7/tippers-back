@@ -5,7 +5,6 @@ import (
 	"tippers-back/controller"
 	"tippers-back/db"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -17,10 +16,5 @@ func main() {
 
 	db.NewDB()
 	r := controller.Router()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
 	r.Run()
 }
